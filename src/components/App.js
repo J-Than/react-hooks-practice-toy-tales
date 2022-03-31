@@ -35,14 +35,22 @@ function App() {
     .then(data => setToys([...toys, data]))
   }
 
+  function handleDelete(toyID) {
+    fetch(`http://localhost:3001/toys/${toyID}`, {
+      method: "DELETE"
+    })
+    .then(r => r.json())
+    .then(() => setToys(toys.filter(toy => toy.id !== toyID)))
+  }
+
   return (
     <>
       <Header />
       {showForm ? <ToyForm onSubmit={handleNewToy} /> : null}
       <div className="buttonContainer">
-        <button onClick={handleClick}>Add a Toy</button>
+        <button onClick={handleClick}>{showForm ? "Close Toy Form" : "Add a Toy"}</button>
       </div>
-      <ToyContainer toys={toys} />
+      <ToyContainer toys={toys} onDelete={handleDelete} />
     </>
   );
 }
