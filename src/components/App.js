@@ -19,10 +19,26 @@ function App() {
     setShowForm((showForm) => !showForm);
   }
 
+  function handleNewToy(newToy) {
+    fetch("http://localhost:3001/toys", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "name": `${newToy.name}`,
+        "image": `${newToy.image}`,
+        "likes": 0
+      })
+    })
+    .then(r => r.json())
+    .then(data => setToys([...toys, data]))
+  }
+
   return (
     <>
       <Header />
-      {showForm ? <ToyForm /> : null}
+      {showForm ? <ToyForm onSubmit={handleNewToy} /> : null}
       <div className="buttonContainer">
         <button onClick={handleClick}>Add a Toy</button>
       </div>
