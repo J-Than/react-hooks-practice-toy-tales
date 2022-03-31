@@ -35,6 +35,22 @@ function App() {
     .then(data => setToys([...toys, data]))
   }
 
+  function handleLike(toy) {
+    toy.likes+=1;
+
+    fetch(`http://localhost:3001/toys/${toy.id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "likes": toy.likes
+      })
+    })
+    .then(r => r.json())
+    .then(data => setToys(toys.map(t => toy.id===t.id ? data : t)))
+  }
+
   function handleDelete(toyID) {
     fetch(`http://localhost:3001/toys/${toyID}`, {
       method: "DELETE"
@@ -50,7 +66,7 @@ function App() {
       <div className="buttonContainer">
         <button onClick={handleClick}>{showForm ? "Close Toy Form" : "Add a Toy"}</button>
       </div>
-      <ToyContainer toys={toys} onDelete={handleDelete} />
+      <ToyContainer toys={toys} onDelete={handleDelete} onLike={handleLike} />
     </>
   );
 }
